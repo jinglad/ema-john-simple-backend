@@ -12,7 +12,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const port = 5000;
+const port = 4000;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
@@ -32,7 +32,8 @@ client.connect(err => {
 
     app.get('/products', (req, res) => {
         // console.log('Working');
-        productsCollection.find({}).limit(20)
+        const search = req.query.search;
+        productsCollection.find({name : {$regex: search}})
             .toArray((err, documents) => {
                 res.send(documents);
             })
